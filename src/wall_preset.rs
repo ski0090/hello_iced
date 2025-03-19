@@ -1,10 +1,10 @@
-use iced::widget::{Column, button, column};
+use iced::widget::{Column, column, pick_list};
 
 use crate::Message;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub enum WallPresetMessage {
-    Select(usize),
+    Select(String),
 }
 
 impl From<WallPresetMessage> for Message {
@@ -15,25 +15,32 @@ impl From<WallPresetMessage> for Message {
 
 #[derive(Debug, Default)]
 pub struct WallPresetApp {
-    selected: usize,
+    selected: Option<String>,
 }
 
 impl WallPresetApp {
     pub fn new() -> Self {
-        Self { selected: 0 }
+        Self { selected: None }
     }
 
     pub fn view(&self) -> Column<Message> {
         column![
-            button("Wall Preset 1").on_press(WallPresetMessage::Select(0).into()),
-            button("Wall Preset 2").on_press(WallPresetMessage::Select(1).into()),
-            button("Wall Preset 3").on_press(WallPresetMessage::Select(2).into()),
+            pick_list(
+                vec![
+                    "Wall Preset 1".to_string(),
+                    "Wall Preset 2".to_string(),
+                    "Wall Preset 3".to_string()
+                ],
+                self.selected.clone(),
+                |msg| Message::WallPresetMessage(WallPresetMessage::Select(msg)),
+            )
+            .placeholder("Select Wall Preset")
         ]
     }
 
     pub fn update(&mut self, msg: WallPresetMessage) {
         match msg {
-            WallPresetMessage::Select(index) => self.selected = index,
+            WallPresetMessage::Select(selected) => self.selected = Some(selected),
         }
     }
 }

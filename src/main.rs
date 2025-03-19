@@ -11,7 +11,7 @@ pub enum SwitchMenu {
     WallPreset,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub enum Message {
     Increment,
     Decrement,
