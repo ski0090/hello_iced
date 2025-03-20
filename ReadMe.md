@@ -1,30 +1,52 @@
-# iced full stack example
+# Iced Full Stack Example
 
-## Frontend
+## Prerequisites
 
-### Run with Desktop
-
-```powershell
-cd frontend
-cargo run
+```bash
+# Install required tools
+cargo binstall trunk  # install trunk
+rustup target add wasm32-unknown-unknown  # Add WebAssembly target
 ```
 
-### Run with trunck
+## Development
 
-```powershell
-cargo binstall trunk # install trunk
-rustup target add wasm32-unknown-unknown # Add compile target
-cd frontend
+### Frontend Development
+
+1. Desktop Mode (Native)
+
+```bash
+cargo run --bin frontend
+```
+
+2. Web Mode (WASM with hot-reload)
+
+```bash
+# Run from project root
 trunk serve
 ```
 
-## backend
+### Backend Development
 
-Run with webserver
+```bash
+# First, build frontend
+trunk build
 
-```powershell
-cd frontend
-trunck build
-cd ../backend
-cargo run
+# Then run backend server
+cargo run --bin backend
+```
+
+The server will start at `http://127.0.0.1:3000`
+
+## Project Structure
+
+```
+project_root/
+├── frontend/ # Iced frontend application
+│ ├── src/
+│ └── index.html
+├── backend/ # Axum backend server
+│ └── src/
+├── dist/ # Built frontend files (created by trunk)
+├── Trunk.toml # Trunk configuration
+└── README.md
 ```
