@@ -1,14 +1,17 @@
 mod camera;
 mod wall_preset;
+mod wall_remote;
 
 use camera::{CameraApp, CameraMessage};
 use iced::widget::{Column, button, column, row, text};
 use wall_preset::{WallPresetApp, WallPresetMessage};
+use wall_remote::{WallRemoteApp, WallRemoteMessage};
 
 #[derive(Debug, Clone, Copy)]
 pub enum SwitchMenu {
     Camera,
     WallPreset,
+    WallRemote,
 }
 
 #[derive(Debug, Clone)]
@@ -18,6 +21,7 @@ pub enum Message {
     SwitchToApp(SwitchMenu),
     CameraMessage(CameraMessage),
     WallPresetMessage(WallPresetMessage),
+    WallRemoteMessage(WallRemoteMessage),
 }
 
 #[derive(Debug)]
@@ -26,6 +30,7 @@ struct MyApp {
     current_app: SwitchMenu,
     camera_app: CameraApp,
     wall_preset_app: WallPresetApp,
+    wall_remote_app: WallRemoteApp,
 }
 
 impl Default for MyApp {
@@ -35,6 +40,7 @@ impl Default for MyApp {
             current_app: SwitchMenu::Camera,
             camera_app: CameraApp::new(),
             wall_preset_app: WallPresetApp::new(),
+            wall_remote_app: WallRemoteApp::new(),
         }
     }
 }
@@ -48,11 +54,13 @@ impl MyApp {
         let app_buttons = row![
             button("Camera").on_press(Message::SwitchToApp(SwitchMenu::Camera)),
             button("Wall Preset").on_press(Message::SwitchToApp(SwitchMenu::WallPreset)),
+            button("Wall Remote").on_press(Message::SwitchToApp(SwitchMenu::WallRemote)),
         ];
 
         let current = match self.current_app {
             SwitchMenu::Camera => self.camera_app.view(),
             SwitchMenu::WallPreset => self.wall_preset_app.view(),
+            SwitchMenu::WallRemote => self.wall_remote_app.view(),
         };
 
         column![
@@ -71,6 +79,7 @@ impl MyApp {
             Message::SwitchToApp(index) => self.current_app = index,
             Message::CameraMessage(msg) => self.camera_app.update(msg),
             Message::WallPresetMessage(msg) => self.wall_preset_app.update(msg),
+            Message::WallRemoteMessage(msg) => self.wall_remote_app.update(msg),
         }
     }
 }
