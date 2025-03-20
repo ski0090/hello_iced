@@ -1,12 +1,21 @@
 use axum::{Router, routing::get_service};
+use std::path::PathBuf;
 use tower_http::{services::fs::ServeDir, trace::TraceLayer};
+
+fn get_project_root() -> PathBuf {
+    let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")); // backend 디렉토리
+    manifest_dir.parent().unwrap().to_path_buf() // 프로젝트 루트
+}
 
 #[tokio::main]
 async fn main() {
+    let project_root = get_project_root();
+    let dist_path = project_root.join("dist");
+
     // 정적 파일 서비스 설정
-    let static_files_service = ServeDir::new("../dist")
+    let static_files_service = ServeDir::new(&dist_path)
         .append_index_html_on_directories(true)
-        .fallback(ServeDir::new("../dist/index.html"));
+        .fallback(ServeDir::new(dist_path.join("index.html")));
 
     let app = Router::new()
         .fallback_service(get_service(static_files_service))
