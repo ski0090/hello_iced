@@ -1,8 +1,9 @@
+#[cfg(feature = "desktop")]
 mod camera;
 mod wall_preset;
 mod wall_remote;
 
-use camera::{CameraApp, CameraMessage};
+use camera::CameraApp;
 use iced::widget::{Column, button, column, row, text};
 use wall_preset::{WallPresetApp, WallPresetMessage};
 use wall_remote::{WallRemoteApp, WallRemoteMessage};
@@ -19,7 +20,6 @@ pub enum Message {
     Increment,
     Decrement,
     SwitchToApp(SwitchMenu),
-    CameraMessage(CameraMessage),
     WallPresetMessage(WallPresetMessage),
     WallRemoteMessage(WallRemoteMessage),
 }
@@ -28,6 +28,7 @@ pub enum Message {
 struct MyApp {
     count: i32,
     current_app: SwitchMenu,
+    #[cfg(feature = "desktop")]
     camera_app: CameraApp,
     wall_preset_app: WallPresetApp,
     wall_remote_app: WallRemoteApp,
@@ -52,12 +53,14 @@ impl MyApp {
 
     pub fn view(&self) -> Column<Message> {
         let app_buttons = row![
+            #[cfg(feature = "desktop")]
             button("Camera").on_press(Message::SwitchToApp(SwitchMenu::Camera)),
             button("Wall Preset").on_press(Message::SwitchToApp(SwitchMenu::WallPreset)),
             button("Wall Remote").on_press(Message::SwitchToApp(SwitchMenu::WallRemote)),
         ];
 
         let current = match self.current_app {
+            #[cfg(feature = "desktop")]
             SwitchMenu::Camera => self.camera_app.view(),
             SwitchMenu::WallPreset => self.wall_preset_app.view(),
             SwitchMenu::WallRemote => self.wall_remote_app.view(),
@@ -77,7 +80,6 @@ impl MyApp {
             Message::Increment => self.count += 1,
             Message::Decrement => self.count -= 1,
             Message::SwitchToApp(index) => self.current_app = index,
-            Message::CameraMessage(msg) => self.camera_app.update(msg),
             Message::WallPresetMessage(msg) => self.wall_preset_app.update(msg),
             Message::WallRemoteMessage(msg) => self.wall_remote_app.update(msg),
         }
