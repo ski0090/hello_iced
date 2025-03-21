@@ -2,7 +2,7 @@ mod camera;
 mod wall_preset;
 mod wall_remote;
 
-use camera::{CameraApp, CameraMessage};
+use camera::CameraApp;
 use iced::widget::{Column, button, column, row, text};
 use wall_preset::{WallPresetApp, WallPresetMessage};
 use wall_remote::{WallRemoteApp, WallRemoteMessage};
@@ -19,7 +19,6 @@ pub enum Message {
     Increment,
     Decrement,
     SwitchToApp(SwitchMenu),
-    CameraMessage(CameraMessage),
     WallPresetMessage(WallPresetMessage),
     WallRemoteMessage(WallRemoteMessage),
 }
@@ -77,7 +76,6 @@ impl MyApp {
             Message::Increment => self.count += 1,
             Message::Decrement => self.count -= 1,
             Message::SwitchToApp(index) => self.current_app = index,
-            Message::CameraMessage(msg) => self.camera_app.update(msg),
             Message::WallPresetMessage(msg) => self.wall_preset_app.update(msg),
             Message::WallRemoteMessage(msg) => self.wall_remote_app.update(msg),
         }
